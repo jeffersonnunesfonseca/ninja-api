@@ -41,6 +41,7 @@ HTTP_MAP = {
     ObjectDoesNotExist: HTTPStatus.NOT_FOUND,
     PermissionDenied: HTTPStatus.FORBIDDEN,
     ValidationError: HTTPStatus.UNPROCESSABLE_ENTITY,
+    ValueError: HTTPStatus.BAD_REQUEST,
 }
 
 
