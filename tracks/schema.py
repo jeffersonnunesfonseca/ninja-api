@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 from functools import wraps
 from http import HTTPStatus
-from typing import Generic, Optional, TypeVar
+from typing import Generic, TypeVar
 
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from ninja import Schema
@@ -19,7 +19,7 @@ class BaseResponseStatus(str, Enum):
 class BaseResponse(Schema, Generic[T]):
     status: BaseResponseStatus
     message: str
-    data: Optional[T] = None
+    data: T | None = None
 
 
 class TrackSchema(Schema):

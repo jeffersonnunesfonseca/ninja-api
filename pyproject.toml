@@ -1,11 +1,12 @@
 [project]
 name = "ninja-api"
-version = "0.1.0"
-description = "Add your description here"
+version = "0.0.1"
+description = "Projeto para estudo do framework Django Ninja"
 readme = "README.md"
-requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Jefferson Nunes Fonseca", email = "jeffersonnunesfonseca@gmail.com" }]
+requires-python = ">=3.13"
 dependencies = [
-    "django>=5.2.6",
     "django-ninja>=1.4.3",
     "orjson>=3.11.3",
 ]
@@ -13,4 +14,77 @@ dependencies = [
 [dependency-groups]
 dev = [
     "ipdb>=0.13.13",
+    "pytest>=8.4.2",
+    "pytest-django>=4.11.1",
 ]
+
+[project.urls]
+Homepage = "https://www.otaviomiranda.com.br/"
+# Documentation = "https://example.org"
+# Repository = "https://github.com/me/spam.git"
+# Issues = "https://github.com/me/spam/issues"
+# Changelog = "https://github.com/me/spam/blob/master/CHANGELOG.md"
+
+[project.optional-dependencies]
+dev = ["ruff",  "pytest", "pytest-xdist"]
+
+
+# ============================
+# Lint e formatação (Ruff)
+# ============================
+[tool.ruff]
+line-length = 88
+target-version = "py313"
+fix = true
+show-fixes = true
+indent-width = 4
+exclude = ["venv", ".venv", "env", ".env", "node_modules", "__pycache__"]
+
+# Regras estão em https://docs.astral.sh/ruff/rules/
+[tool.ruff.lint]
+select = [
+    "ASYNC",
+    "A",
+    # "ANN",
+    "B",
+    "BLE",
+    "C4",
+    "C90",
+    "COM",
+    "E",
+    "EM",
+    "ERA",
+    "EXE",
+    "F",
+    "FBT",
+    "FIX",
+    "I",
+    "ICN",
+    "ISC",
+    "Q",
+    "RET",
+    "RSE",
+    # "S",
+    "SIM",
+    "SLF",
+    "T10",
+    "T20",
+    "TC",
+    "TD",
+    "TRY",
+    "UP",
+    "W",
+    "YTT",
+    "RUF",
+    "N",
+]
+ignore = ["T201", "COM812"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["ANN201", "S101"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+

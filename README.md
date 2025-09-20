@@ -1,3 +1,12 @@
-# ninja-api
+# CobrejaApp - Django Ninja
 
-Seguindo o tutorial https://www.youtube.com/watch?v=3IQfXEj3a2o&list=PLzwzHN_olbL58REgk2zS_Nf1F7HdUapV7&index=3
+Projeto criado para estudar e aprofundar conhecimentos no framework Django Ninja, baseado em Django.
+Também serve como referência de arquitetura de projeto para consultas futuras.
+
+# Comandos rápidos
+
+- `uv sync` - instala dependencias
+- `uv run manage.py makemigrations` - verifica se existe novas models para migrar
+- `uv run manage.py migrate` - roda a migration
+- `uv run pytest -v` - roda os testes
+- ` uv run manage.py runserver` - inicia a app a nivel local
