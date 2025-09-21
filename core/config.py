@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     DJANGO_SETTINGS_MODULE: str = Field(
         default="core.settings", alias="DJANGO_SETTINGS_MODULE"
     )
+    ENVIRONMENT: str = Field(default="development", alias="ENVIRONMENT")
 
     @computed_field
     @property
