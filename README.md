@@ -11,6 +11,8 @@ Além disso, o projeto explora o conceito de multi-tenancy, onde:
 
 Para rodar a migrate para todos, será necessário rodar o comando `uv run manage.py migrate_tenants`
 
+Em ambiente de desenvolvimento, irá funcionar sem o mult tenant, basta nao passar o `X-TOKEN` e o `ENVIROMENT` ser `development`
+
 # Comandos rápidos
 
 - `uv sync` - instala dependencias
