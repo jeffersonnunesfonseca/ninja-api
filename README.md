@@ -20,6 +20,7 @@ para rodar a migrate para todos, será necessário rodar o comando `uv run manag
 
 - `uv run pytest -v` - roda os testes
 - `uv run manage.py runserver` - inicia a app a nivel local
+- `docker compose up -d --build --force-recreate --remove-orphans`- subir infra local para coleta de traces e métricas
 
 # Telemetria
 
