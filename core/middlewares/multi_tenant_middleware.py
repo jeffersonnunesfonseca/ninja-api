@@ -11,7 +11,13 @@ from core.db_router import set_current_tenant
 
 
 class MultiTenantMiddleware(MiddlewareMixin):
+    # Acho melhor forma para aplicar o middleware só nas rotas da API
+    API_PREFIX = "/cobreja/api/"
+
     def process_request(self, request):
+        if not request.path.startswith(self.API_PREFIX):
+            return None  # ignora rotas não-API
+
         # Pega os headers do tenant
         token = request.headers.get("X-TOKEN")
         if not token:
