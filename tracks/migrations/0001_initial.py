@@ -12,13 +12,13 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Track',
+            name="Track",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=250)),
-                ('artist', models.CharField(max_length=250)),
-                ('duration', models.FloatField()),
-                ('last_play', models.DateTimeField()),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("title", models.CharField(max_length=250)),
+                ("artist", models.CharField(max_length=250)),
+                ("duration", models.FloatField()),
+                ("last_play", models.DateTimeField()),
             ],
         ),
     ]

@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from typing import List, Optional
 
 from django.http import HttpRequest
 from ninja import NinjaAPI
@@ -21,17 +20,16 @@ def health(request: HttpRequest):
     return "OK"
 
 
-@api.get("/tracks", response=BaseResponse[List[TrackSchemaResponse]])
+@api.get("/", response=BaseResponse[list[TrackSchemaResponse]])
 @base_response
-def tracks(request: HttpRequest, title: Optional[str] = None):
+def tracks(request: HttpRequest, title: str | None = None):
     if title:
         return Track.objects.filter(title__icontains=title)
-    else:
-        return Track.objects.all()
+    return Track.objects.all()
 
 
 @api.get(
-    "/tracks/{track_id}",
+    "/{track_id}",
     response={
         HTTPStatus.OK: BaseResponse[TrackSchemaResponse],
         HTTPStatus.NOT_FOUND: BaseResponse[NotFoundSchema],
@@ -42,14 +40,14 @@ def tracks_by_id(request: HttpRequest, track_id: int):
     return Track.objects.get(pk=track_id)
 
 
-@api.post("/tracks", response={HTTPStatus.CREATED: BaseResponse[TrackSchemaResponse]})
+@api.post("/", response={HTTPStatus.CREATED: BaseResponse[TrackSchemaResponse]})
 @base_response
 def create_track(request: HttpRequest, track: TrackSchema):
     return HTTPStatus.CREATED, Track.objects.create(**track.dict())
 
 
 @api.put(
-    "/tracks/{track_id}",
+    "/{track_id}",
     response={
         HTTPStatus.OK: BaseResponse[TrackSchemaResponse],
         HTTPStatus.NOT_FOUND: BaseResponse[NotFoundSchema],
@@ -66,7 +64,7 @@ def update_track(request: HttpRequest, track_id: int, data: TrackSchema):
 
 
 @api.delete(
-    "/tracks/{track_id}",
+    "/{track_id}",
     response={HTTPStatus.OK: None, HTTPStatus.NOT_FOUND: BaseResponse[NotFoundSchema]},
 )
 @base_response
