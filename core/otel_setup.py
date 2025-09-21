@@ -5,7 +5,6 @@ from opentelemetry import metrics, trace
 from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExporter
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 from opentelemetry.instrumentation.django import DjangoInstrumentor
-from opentelemetry.instrumentation.requests import RequestsInstrumentor
 from opentelemetry.instrumentation.sqlite3 import SQLite3Instrumentor
 from opentelemetry.metrics import CallbackOptions, Observation
 from opentelemetry.sdk.metrics import MeterProvider
@@ -115,4 +114,4 @@ DjangoInstrumentor().instrument()
 SQLite3Instrumentor().instrument()
 
 # Se você estiver usando requests em seu código
-RequestsInstrumentor().instrument()
+# RequestsInstrumentor().instrument()
