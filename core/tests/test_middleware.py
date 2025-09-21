@@ -6,7 +6,7 @@ from django.test import RequestFactory
 
 from cobreja_app.shareds.enum import EnvrionmentEnum
 from core.db_router import get_current_tenant
-from core.middleware import MultiTenantMiddleware
+from core.middlewares.multi_tenant_middleware import MultiTenantMiddleware
 
 
 @pytest.fixture
@@ -14,7 +14,7 @@ def fake_redis():
     """Cria um fake Redis e aplica patch apenas quando usado"""
     fake = MagicMock()
     with patch(
-        "core.middleware.get_redis_connection"
+        "core.middlewares.multi_tenant_middleware.get_redis_connection"
     ) as mock_redis:  # substitui o Redis real pelo mock
         mock_redis.return_value = fake
         yield fake
