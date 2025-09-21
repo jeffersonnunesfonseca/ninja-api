@@ -10,3 +10,8 @@ class ChannelEnum(str, Enum):
 class RuleStatusEnum(str, Enum):
     ENABLED = "ENABLED"
     DISABLED = "DISABLED"
+
+
+class EnvrionmentEnum(str, Enum):
+    DEVELOPMENT = "development"
+    PRODUCTION = "production"
