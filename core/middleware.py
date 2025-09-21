@@ -1,13 +1,13 @@
+from http import HTTPStatus
+
 from django.db import connections
+from django.http import HttpResponse
 from django.utils.deprecation import MiddlewareMixin
 from django_redis import get_redis_connection
 
+from cobreja_app.shareds.enum import EnvrionmentEnum
 from core.config import settings
 from core.db_router import set_current_tenant
-from core.exceptions import (
-    NotAllowedInNonDevelopmentEnvironmentError,
-    TenantNotFoundError,
-)
 
 
 class MultiTenantMiddleware(MiddlewareMixin):
@@ -15,14 +15,16 @@ class MultiTenantMiddleware(MiddlewareMixin):
         # Pega os headers do tenant
         token = request.headers.get("X-TOKEN")
         if not token:
-            self._to_dev()
-            return
+            return HttpResponse("X-TOKEN required", status=HTTPStatus.UNAUTHORIZED)
+
+        if token == EnvrionmentEnum.DEVELOPMENT:
+            return self._to_dev()
 
         redis_client = get_redis_connection("default")
 
         tenant_data = redis_client.hgetall(f"tenant:{token}")
         if not tenant_data:
-            raise TenantNotFoundError(token)
+            return HttpResponse("X-TOKEN not configured", status=HTTPStatus.FORBIDDEN)
 
         connections.databases["tenant"] = {
             "ENGINE": tenant_data.get(
@@ -39,12 +41,15 @@ class MultiTenantMiddleware(MiddlewareMixin):
         request.tenant_db_alias = "tenant"
         # Define globalmente para o router via thread local
         set_current_tenant("tenant")
+        return None
 
     def _to_dev(self):
         """Não deixa ser single tenant em produção"""
-        if settings.ENVIRONMENT != "development":
-            raise NotAllowedInNonDevelopmentEnvironmentError
+        if settings.ENVIRONMENT != EnvrionmentEnum.DEVELOPMENT:
+            return HttpResponse(
+                "Only development use single tenant",
+                status=HTTPStatus.UNPROCESSABLE_ENTITY,
+            )
 
         set_current_tenant("default")
-
-        return
+        return None
