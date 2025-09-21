@@ -14,6 +14,8 @@ from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
+from core.config import settings
+
 
 def get_system_metrics(options: CallbackOptions):
     """Callback function to collect system metrics"""
@@ -53,7 +55,7 @@ def get_application_metrics(options: CallbackOptions):
 
 # Create resource with service information
 resource = Resource(
-    attributes={SERVICE_NAME: "cobreja_app", "environment": "production"}
+    attributes={SERVICE_NAME: "cobreja_app", "environment": settings.ENVIRONMENT}
 )
 
 # Create OTLP exporters

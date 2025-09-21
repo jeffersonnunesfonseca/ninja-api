@@ -5,6 +5,8 @@ from pathlib import Path
 from pydantic import Field, computed_field
 from pydantic_settings import BaseSettings
 
+from cobreja_app.shareds.enum import EnvrionmentEnum
+
 
 class Settings(BaseSettings):
     APP_SECRET_KEY: str = Field(default="TESTE", alias="APP_SECRET_KEY")
@@ -23,7 +25,7 @@ class Settings(BaseSettings):
     DJANGO_SETTINGS_MODULE: str = Field(
         default="core.settings", alias="DJANGO_SETTINGS_MODULE"
     )
-    ENVIRONMENT: str = Field(default="development", alias="ENVIRONMENT")
+    ENVIRONMENT: str = Field(default=EnvrionmentEnum.DEVELOPMENT, alias="ENVIRONMENT")
 
     @computed_field
     @property
