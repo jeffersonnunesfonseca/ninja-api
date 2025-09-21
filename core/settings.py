@@ -38,6 +38,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "core.middleware.MultiTenantMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -59,11 +60,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "core.wsgi.application"
 
+CACHES = settings.caches
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 DATABASES = settings.database
+DATABASE_ROUTERS = ["core.db_router.MultiTenantRouter"]
 
 
 # Password validation

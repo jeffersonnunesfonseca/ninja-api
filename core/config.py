@@ -18,6 +18,8 @@ class Settings(BaseSettings):
 
     TENANCY_USE_DSN: bool = Field(default=False, alias="TENANCY_USE_DSN")
 
+    REDIS_URL: str = Field(default="redis://localhost:6379", alias="REDIS_URL")
+
     @computed_field
     @property
     def database(self) -> dict:
@@ -42,6 +44,19 @@ class Settings(BaseSettings):
                 **({"PASSWORD": self.DB_PASSWORD} if self.DB_PASSWORD else {}),
                 **({"HOST": self.DB_HOST} if self.DB_HOST else {}),
                 **({"PORT": str(self.DB_PORT)} if self.DB_PORT else {}),
+            }
+        }
+
+    @computed_field
+    @property
+    def caches(self) -> dict:
+        return {
+            "default": {
+                "BACKEND": "django_redis.cache.RedisCache",
+                "LOCATION": self.REDIS_URL,
+                "OPTIONS": {
+                    "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                },
             }
         }
 
