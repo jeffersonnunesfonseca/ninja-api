@@ -20,6 +20,10 @@ class Settings(BaseSettings):
 
     REDIS_URL: str = Field(default="redis://localhost:6379", alias="REDIS_URL")
 
+    DJANGO_SETTINGS_MODULE: str = Field(
+        default="core.settings", alias="DJANGO_SETTINGS_MODULE"
+    )
+
     @computed_field
     @property
     def database(self) -> dict:

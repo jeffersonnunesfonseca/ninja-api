@@ -109,9 +109,9 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# LOG das queries
 LOGGING = {
     "version": 1,
+    "disable_existing_loggers": False,
     "filters": {
         "require_debug_true": {
             "()": "django.utils.log.RequireDebugTrue",
@@ -125,9 +125,17 @@ LOGGING = {
         }
     },
     "loggers": {
+        # Queries SQL do Django
         "django.db.backends": {
             "level": "DEBUG",
             "handlers": ["console"],
-        }
+            "propagate": False,
+        },
+        # Logs do OpenTelemetry
+        "opentelemetry": {
+            "level": "DEBUG",
+            "handlers": ["console"],
+            "propagate": True,
+        },
     },
 }

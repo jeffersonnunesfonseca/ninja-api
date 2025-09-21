@@ -11,6 +11,9 @@ import os
 
 from django.core.asgi import get_asgi_application
 
+# Import OpenTelemetry setup before Django initialization
+import core.otel_setup  # noqa: F401
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
 
 application = get_asgi_application()
