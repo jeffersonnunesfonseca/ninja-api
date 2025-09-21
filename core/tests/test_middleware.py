@@ -1,13 +1,11 @@
+from http import HTTPStatus
 from unittest.mock import MagicMock, patch
 
 import pytest
 from django.test import RequestFactory
 
+from cobreja_app.shareds.enum import EnvrionmentEnum
 from core.db_router import get_current_tenant
-from core.exceptions import (
-    NotAllowedInNonDevelopmentEnvironmentError,
-    TenantNotFoundError,
-)
 from core.middleware import MultiTenantMiddleware
 
 
@@ -32,25 +30,20 @@ def rf():
 
 @pytest.mark.django_db
 class TestMultiTenantMiddleware:
-    # @override_settings(ENVIRONMENT="development") só funciona se tiver usando o
-    # settings do django e nao do pydantic
-    def test_without_token_env_dev(self, rf):
+    def test_without_token(self, rf):
         request = rf.get("/")  # sem header X-TOKEN
         mw = MultiTenantMiddleware(lambda r: r)
 
         response = mw.process_request(request)
+        assert response.status_code == HTTPStatus.UNAUTHORIZED
 
-        assert "tenant_db_alias" not in request
-        assert get_current_tenant() == "default"
-        assert response is None  # não bloqueia
-
-    def test_with_token_env_dev_without_tenant_created(self, rf):
+    def test_without_tenant_created(self, rf):
         request = rf.get("/", HTTP_X_TOKEN="tenant123")
         mw = MultiTenantMiddleware(lambda r: r)
-        with pytest.raises(TenantNotFoundError):
-            mw.process_request(request)
+        response = mw.process_request(request)
+        assert response.status_code == HTTPStatus.FORBIDDEN
 
-    def test_with_token_env_dev(self, rf, fake_redis):
+    def test_with_token(self, rf, fake_redis):
         fake_redis.hgetall.return_value = {
             b"db_name": b"testdb",
             b"db_user": b"user",
@@ -67,13 +60,12 @@ class TestMultiTenantMiddleware:
         assert request.tenant_db_alias == "tenant"
         assert get_current_tenant() == "tenant"
 
-    def test_without_token_env_prod(self, rf):
-        request = rf.get("/")
+    def test_with_dev_token_env_prod(self, rf):
+        request = rf.get("/", HTTP_X_TOKEN=EnvrionmentEnum.DEVELOPMENT)
 
         mw = MultiTenantMiddleware(lambda r: r)
 
-        with (
-            patch("core.config.settings.ENVIRONMENT", "production"),
-            pytest.raises(NotAllowedInNonDevelopmentEnvironmentError),
-        ):
-            mw.process_request(request)
+        with patch("core.config.settings.ENVIRONMENT", EnvrionmentEnum.PRODUCTION):
+            response = mw.process_request(request)
+            assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+            assert response.content == b"Only development use single tenant"
