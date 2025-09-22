@@ -6,5 +6,5 @@ router = Router(tags=["RuleSteps"])
 
 
 @router.get("/_health")
-def health(request):
+async def health(request):
     return f"RULE_STEPS_OK_{time()}"

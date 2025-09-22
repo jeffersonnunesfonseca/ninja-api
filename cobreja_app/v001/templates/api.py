@@ -6,5 +6,5 @@ router = Router(tags=["Templates"])
 
 
 @router.get("/_health")
-def health(request):
+async def health(request):
     return f"TEMPLATES_OK_{time()}"
