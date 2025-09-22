@@ -6,5 +6,5 @@ router = Router(tags=["Installments"])
 
 
 @router.get("/_health")
-def health(request):
+async def health(request):
     return f"INSTALLMENTS_OK_{time()}"

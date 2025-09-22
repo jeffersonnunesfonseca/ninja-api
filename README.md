@@ -31,6 +31,10 @@ Em ambiente de desenvolvimento, irá funcionar sem o mult tenant, basta nao pass
 - `uv run manage.py migrate`
 - `docker compose -f docker-compose-dev.yml up -d --build --force-recreate --remove-orphans`
 
+# Rodar de forma asincrona
+
+= `uv run uvicorn core.asgi:application --host 0.0.0.0 --port 8000 --reload`
+
 # Telemetria
 
 ## 1️⃣ Como funciona o OpenTelemetry
@@ -104,3 +108,34 @@ Define como o OTEL Collector recebe, processa e exporta dados:
 
 - Traces: visualizados no Grafana via Tempo.
 - Metrics: visualizadas no Grafana via Prometheus.
+
+# Teste de Async
+
+- instalar pacote para rodar o testes
+
+```bash
+sudo apt update
+sudo apt install apache2-utils
+```
+
+- `uv run uvicorn core.asgi:application --host 0.0.0.0 --port 8000 --reload`
+
+- para teste sincrono rodar o comando abaixo, comportamento é parecido com o sincrono, mas aqui ele esta utilizando multhreads, basta olhar os logs
+
+```bash
+ab -c 100 -n 100 \
+  -H "X-TOKEN: development" \
+  -H "Accept: application/json" \
+  "http://127.0.0.1:8000/cobreja/api/v001/charges/_health_blocking?delay=3&word=hello"
+
+```
+
+- para teste assincrono rodar o comando abaixo, comportamento é parecido com o sincrono, mas aqui ele esta utilizando multhreads
+- se analisar os logsm perbe que é sempre em cima da main thread
+
+```bash
+ab -c 100 -n 100 \
+  -H "X-TOKEN: development" \
+  -H "Accept: application/json" \
+  "http://127.0.0.1:8000/cobreja/api/v001/charges/_health?delay=3&word=hello"
+```
