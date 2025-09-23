@@ -5,8 +5,10 @@ import pytest
 from django.test import RequestFactory
 
 from cobreja_app.shareds.enum import EnvrionmentEnum
-from core.db_router import get_current_tenant
-from core.middlewares.multi_tenant_middleware import MultiTenantMiddleware
+from core.tenancy.db_router import get_current_tenant
+from core.tenancy.multi_tenant_middleware import MultiTenantMiddleware
+
+ENDPOINT = "/cobreja/api/"
 
 
 @pytest.fixture
@@ -14,7 +16,7 @@ def fake_redis():
     """Cria um fake Redis e aplica patch apenas quando usado"""
     fake = MagicMock()
     with patch(
-        "core.middlewares.multi_tenant_middleware.get_redis_connection"
+        "core.tenancy.multi_tenant_middleware.get_redis_connection"
     ) as mock_redis:  # substitui o Redis real pelo mock
         mock_redis.return_value = fake
         yield fake
@@ -31,14 +33,14 @@ def rf():
 @pytest.mark.django_db
 class TestMultiTenantMiddleware:
     def test_without_token(self, rf):
-        request = rf.get("/")  # sem header X-TOKEN
+        request = rf.get("/cobreja/api/")  # sem header X-TOKEN
         mw = MultiTenantMiddleware(lambda r: r)
 
         response = mw.process_request(request)
         assert response.status_code == HTTPStatus.UNAUTHORIZED
 
     def test_without_tenant_created(self, rf):
-        request = rf.get("/", HTTP_X_TOKEN="tenant123")
+        request = rf.get(ENDPOINT, HTTP_X_TOKEN="tenant123")
         mw = MultiTenantMiddleware(lambda r: r)
         response = mw.process_request(request)
         assert response.status_code == HTTPStatus.FORBIDDEN
@@ -53,7 +55,7 @@ class TestMultiTenantMiddleware:
             b"db_engine": b"django.db.backends.sqlite3",
         }
 
-        request = rf.get("/", HTTP_X_TOKEN="tenant123")
+        request = rf.get(ENDPOINT, HTTP_X_TOKEN="tenant123")
         mw = MultiTenantMiddleware(lambda r: r)
 
         mw.process_request(request)
@@ -61,7 +63,7 @@ class TestMultiTenantMiddleware:
         assert get_current_tenant() == "tenant"
 
     def test_with_dev_token_env_prod(self, rf):
-        request = rf.get("/", HTTP_X_TOKEN=EnvrionmentEnum.DEVELOPMENT)
+        request = rf.get(ENDPOINT, HTTP_X_TOKEN=EnvrionmentEnum.DEVELOPMENT)
 
         mw = MultiTenantMiddleware(lambda r: r)
 

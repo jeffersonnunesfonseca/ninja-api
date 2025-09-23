@@ -7,7 +7,7 @@ from django_redis import get_redis_connection
 
 from cobreja_app.shareds.enum import EnvrionmentEnum
 from core.config import settings
-from core.db_router import set_current_tenant
+from core.tenancy.db_router import set_current_tenant
 
 
 class MultiTenantMiddleware(MiddlewareMixin):

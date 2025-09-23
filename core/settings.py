@@ -38,8 +38,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "core.middlewares.otel_middleware.OTELCustomHeadersMiddleware",
-    "core.middlewares.multi_tenant_middleware.MultiTenantMiddleware",
+    "core.telemetry.otel_middleware.OTELCustomHeadersMiddleware",
+    "core.tenancy.multi_tenant_middleware.MultiTenantMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -66,7 +66,7 @@ CACHES = settings.caches
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 DATABASES = settings.database
-DATABASE_ROUTERS = ["core.db_router.MultiTenantRouter"]
+DATABASE_ROUTERS = ["core.tenancy.db_router.MultiTenantRouter"]
 
 
 # Password validation

@@ -8,7 +8,7 @@ from cobreja_app.shareds.enum import EnvrionmentEnum
 def test_health_endpoint():
     client = Client()
     response = client.get(
-        "/cobreja/v001/charges/_health",
+        "/cobreja/api/v001/charges/_health",
         headers={"X-TOKEN": EnvrionmentEnum.DEVELOPMENT},
     )
 

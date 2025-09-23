@@ -5,10 +5,10 @@ from cobreja_app.shareds.enum import EnvrionmentEnum
 
 
 @pytest.mark.django_db
-def test_health_endpoint():
+def test_installment_health_endpoint():
     client = Client()
     response = client.get(
-        "/cobreja/v001/installments/_health",
+        "/cobreja/api/v001/installments/_health",
         headers={"X-TOKEN": EnvrionmentEnum.DEVELOPMENT},
     )
 
