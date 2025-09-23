@@ -10,7 +10,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
 
 from django.core.asgi import get_asgi_application
 
-# Import OpenTelemetry setup depois que os settings estão definidos
-import core.otel_setup  # noqa: F401
+# Deve manter nessa ordem
+import core.telemetry.otel_setup  # noqa: F401
 
 application = get_asgi_application()
