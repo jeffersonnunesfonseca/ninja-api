@@ -1,31 +1,24 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 from pydantic import Field, computed_field
 from pydantic_settings import BaseSettings
 
-from cobreja_app.shareds.enum import EnvrionmentEnum
-
 
 class Settings(BaseSettings):
     APP_SECRET_KEY: str = Field(default="TESTE", alias="APP_SECRET_KEY")
-
-    DB_ENGINE: str = Field(default="django.db.backends.sqlite3", alias="DB_ENGINE")
-    DB_NAME: str = Field(default="db.sqlite3", alias="DB_NAME")
-    DB_USER: str | None = Field(default="admin", alias="DB_USER")
-    DB_PASSWORD: str | None = Field(default="admin", alias="DB_PASSWORD")
-    DB_HOST: str | None = Field(default="localhost", alias="DB_HOST")
-    DB_PORT: int | None = Field(default=5432, alias="DB_PORT")
-
-    TENANCY_USE_DSN: bool = Field(default=False, alias="TENANCY_USE_DSN")
-
-    REDIS_URL: str = Field(default="redis://localhost:6379", alias="REDIS_URL")
-
-    DJANGO_SETTINGS_MODULE: str = Field(
-        default="core.settings", alias="DJANGO_SETTINGS_MODULE"
-    )
-    ENVIRONMENT: str = Field(default=EnvrionmentEnum.DEVELOPMENT, alias="ENVIRONMENT")
+    APP_VERSION: str
+    DB_ENGINE: str
+    DB_NAME: str
+    DB_USER: str
+    DB_PASSWORD: str
+    DB_HOST: str
+    DB_PORT: int
+    REDIS_URL: str
+    DJANGO_SETTINGS_MODULE: str
+    ENVIRONMENT: str
 
     @computed_field
     @property
@@ -68,7 +61,7 @@ class Settings(BaseSettings):
         }
 
     class Config:
-        env_file = ".env"
+        env_file = ".env.tests" if os.environ.get("DJANGO_ENV") == "test" else ".env"
         env_file_encoding = "utf-8"
 
 
