@@ -6,21 +6,19 @@ from pathlib import Path
 from pydantic import Field, computed_field
 from pydantic_settings import BaseSettings
 
-from cobreja_app.shareds.enum import EnvrionmentEnum
-
 
 class Settings(BaseSettings):
     APP_SECRET_KEY: str = Field(default="TESTE", alias="APP_SECRET_KEY")
-
-    DB_ENGINE: str = Field("DB_ENGINE")
-    DB_NAME: str = Field("DB_NAME")
-    DB_USER: str = Field("DB_USER")
-    DB_PASSWORD: str = Field("DB_PASSWORD")
-    DB_HOST: str = Field("DB_HOST")
-    DB_PORT: int = Field("DB_PORT")
-    REDIS_URL: str = Field("REDIS_URL")
-    DJANGO_SETTINGS_MODULE: str = Field(default="core.settings")
-    ENVIRONMENT: str = Field(default=EnvrionmentEnum.DEVELOPMENT, alias="ENVIRONMENT")
+    APP_VERSION: str
+    DB_ENGINE: str
+    DB_NAME: str
+    DB_USER: str
+    DB_PASSWORD: str
+    DB_HOST: str
+    DB_PORT: int
+    REDIS_URL: str
+    DJANGO_SETTINGS_MODULE: str
+    ENVIRONMENT: str
 
     @computed_field
     @property
