@@ -26,6 +26,12 @@ Em ambiente de desenvolvimento, irá funcionar sem o mult tenant, basta nao pass
 
 # Rodando Local - sem mult tenant
 
+- Copiar `.env.example` para `.env` e preencher com os valores desejados
+
+```bash
+cp .env.example .env
+```
+
 - `uv sync`
 - `uv run manage.py makemigrations`
 - `uv run manage.py migrate`
@@ -33,7 +39,7 @@ Em ambiente de desenvolvimento, irá funcionar sem o mult tenant, basta nao pass
 
 # Rodar de forma asincrona
 
-= `uv run uvicorn core.asgi:application --host 0.0.0.0 --port 8000 --reload`
+- `uv run uvicorn core.asgi:application --host 0.0.0.0 --port 8000 --reload`
 
 # Telemetria
 
