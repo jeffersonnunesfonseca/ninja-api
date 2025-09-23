@@ -4,7 +4,9 @@ version = "0.0.1"
 description = "Projeto para estudo do framework Django Ninja"
 readme = "README.md"
 license = "MIT"
-authors = [{ name = "Jefferson Nunes Fonseca", email = "jeffersonnunesfonseca@gmail.com" }]
+authors = [
+    { name = "Jefferson Nunes Fonseca", email = "jeffersonnunesfonseca@gmail.com" },
+]
 requires-python = ">=3.13"
 dependencies = [
     "django-ninja>=1.4.3",
@@ -30,6 +32,7 @@ dev = [
     "opentelemetry-exporter-otlp-proto-http>=1.37.0",
     "pytest>=8.4.2",
     "pytest-django>=4.11.1",
+    "pytest-env>=1.1.5",
 ]
 
 [project.urls]
@@ -40,7 +43,7 @@ Homepage = "https://www.otaviomiranda.com.br/"
 # Changelog = "https://github.com/me/spam/blob/master/CHANGELOG.md"
 
 [project.optional-dependencies]
-dev = ["ruff",  "pytest", "pytest-xdist"]
+dev = ["ruff", "pytest", "pytest-xdist"]
 
 
 # ============================
@@ -66,7 +69,7 @@ select = [
     "C90",
     "COM",
     "E",
-    "EM",
+    # "EM",
     "ERA",
     "EXE",
     "F",
@@ -85,7 +88,7 @@ select = [
     "T20",
     "TC",
     "TD",
-    "TRY",
+    # "TRY",
     "UP",
     "W",
     "YTT",
@@ -102,3 +105,19 @@ quote-style = "double"
 indent-style = "space"
 line-ending = "lf"
 
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "core.settings"
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
+filterwarnings = ["ignore::DeprecationWarning"]
+norecursedirs = [
+    ".git",
+    ".venv",
+    "venv",
+    "env",
+    "node_modules",
+    "migrations",
+    "__pycache__",
+    "*.egg-info",
+    "tempo-data",
+]
+env = ["DJANGO_ENV=test"]
