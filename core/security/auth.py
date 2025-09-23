@@ -1,36 +1,30 @@
 from http import HTTPStatus
 
 from django.db import connections
-from django.http import HttpResponse
-from django.utils.deprecation import MiddlewareMixin
 from django_redis import get_redis_connection
+from ninja.errors import HttpError
+from ninja.security import APIKeyHeader
 
 from cobreja_app.shareds.enum import EnvrionmentEnum
 from core.config import settings
 from core.tenancy.db_router import set_current_tenant
 
 
-class MultiTenantMiddleware(MiddlewareMixin):
-    # Acho melhor forma para aplicar o middleware só nas rotas da API
-    API_PREFIX = "/cobreja/api/"
+class AuthToken(APIKeyHeader):
+    param_name = "X-TOKEN"  # muda o header aceito
 
-    def process_request(self, request):
-        if not request.path.startswith(self.API_PREFIX):
-            return None  # ignora rotas não-API
-
-        # Pega os headers do tenant
-        token = request.headers.get("X-TOKEN")
+    def authenticate(self, request, token: str):
         if not token:
-            return HttpResponse("X-TOKEN required", status=HTTPStatus.UNAUTHORIZED)
+            raise HttpError(HTTPStatus.UNAUTHORIZED, "X-TOKEN required")
 
         if token == EnvrionmentEnum.DEVELOPMENT:
             return self._to_dev()
 
         redis_client = get_redis_connection("default")
-
         tenant_data = redis_client.hgetall(f"tenant:{token}")
+
         if not tenant_data:
-            return HttpResponse("X-TOKEN not configured", status=HTTPStatus.FORBIDDEN)
+            raise HttpError(HTTPStatus.FORBIDDEN, "X-TOKEN not configured")
 
         connections.databases["tenant"] = {
             "ENGINE": tenant_data.get(
@@ -43,19 +37,15 @@ class MultiTenantMiddleware(MiddlewareMixin):
             "PORT": tenant_data.get(b"db_port", b"5432").decode(),
         }
 
-        # Define alias da request
         request.tenant_db_alias = "tenant"
-        # Define globalmente para o router via thread local
         set_current_tenant("tenant")
-        return None
+        return token
 
     def _to_dev(self):
-        """Não deixa ser single tenant em produção"""
         if settings.ENVIRONMENT != EnvrionmentEnum.DEVELOPMENT:
-            return HttpResponse(
+            raise HttpError(
+                HTTPStatus.UNPROCESSABLE_ENTITY,
                 "Only development use single tenant",
-                status=HTTPStatus.UNPROCESSABLE_ENTITY,
             )
-
         set_current_tenant("default")
-        return None
+        return "default"

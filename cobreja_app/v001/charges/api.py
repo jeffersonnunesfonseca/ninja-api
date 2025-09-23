@@ -2,7 +2,9 @@ from time import time
 
 from ninja import Router
 
-router = Router(tags=["Charges"])
+from core.security.auth import AuthToken
+
+router = Router(tags=["Charges"], auth=AuthToken())
 
 
 @router.get("/_health")

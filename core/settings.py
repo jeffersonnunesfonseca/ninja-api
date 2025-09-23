@@ -39,7 +39,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "core.telemetry.otel_middleware.OTELCustomHeadersMiddleware",
-    "core.tenancy.multi_tenant_middleware.MultiTenantMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
