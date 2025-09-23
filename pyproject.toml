@@ -120,4 +120,5 @@ norecursedirs = [
     "*.egg-info",
     "tempo-data",
 ]
+# necessário instalar  uv add --dev pytest-env
 env = ["DJANGO_ENV=test"]
